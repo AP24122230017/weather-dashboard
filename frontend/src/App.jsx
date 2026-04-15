@@ -7,7 +7,7 @@ import SearchHistory from "./components/SearchHistory";
 import { motion, AnimatePresence } from "framer-motion";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api/weather",
+  baseURL: "https://weather-dashboard-9iaw.onrender.com/api/weather",
 });
 
 function App() {
