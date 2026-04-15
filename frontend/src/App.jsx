@@ -5,10 +5,7 @@ import WeatherCard from "./components/WeatherCard";
 import ForecastCard from "./components/ForecastCard";
 import SearchHistory from "./components/SearchHistory";
 import { motion, AnimatePresence } from "framer-motion";
-
-const api = axios.create({
-  baseURL: "https://weather-dashboard-9iaw.onrender.com/api/weather",
-});
+import { api } from "./api";
 
 function App() {
   const [weather, setWeather] = useState(null);
@@ -31,24 +28,27 @@ function App() {
   }, []);
 
   const handleSearch = async (city) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [weatherRes, forecastRes] = await Promise.all([
-        api.get(`/current/${city}`),
-        api.get(`/forecast/${city}`),
-      ]);
-      setWeather(weatherRes.data);
-      setForecast(forecastRes.data);
-      fetchHistory();
-    } catch (err) {
-      setError(err.response?.data?.message || "City not found");
-      setWeather(null);
-      setForecast(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  setError("");
+
+  try {
+    const [weatherRes, forecastRes] = await Promise.all([
+      api.get(`/current/${city}`),
+      api.get(`/forecast/${city}`)
+    ]);
+
+    setWeather(weatherRes.data);
+    setForecast(forecastRes.data);
+    fetchHistory();
+  } catch (err) {
+    console.log(err);
+    setError("Failed to fetch weather");
+    setWeather(null);
+    setForecast(null);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleLocation = () => {
     if ("geolocation" in navigator) {
